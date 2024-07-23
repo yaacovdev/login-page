@@ -1,0 +1,15 @@
+{:source-paths
+ ["src/dev"
+  "src/main"
+  "src/test"]
+
+ :dependencies
+ [[reagent "1.2.0"]]
+
+ :builds
+ {:app
+  {:target :react-native
+   :init-fn app/init
+   :output-dir "app"
+   :devtools {:autoload true
+              :preloads [shadow.expo.keep-awake]}}}}
