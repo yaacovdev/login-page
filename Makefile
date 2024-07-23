@@ -1,5 +1,3 @@
-# Makefile
-
 # Variables
 VENV = backend/login_server/venv
 MONGO_CONTAINER = mongodb
@@ -9,9 +7,9 @@ FRONTEND_DIR = frontend/web-registration
 MOBILE_DIR = frontend/MobileRegistration
 
 # Targets
-.PHONY: all init_db init_server start_server start_openia start_web start_mobile
+.PHONY: all init_db init_server start_db init_server start_server start_openia start_web start_mobile
 
-all: init_db init_server start_server start_openia start_web start_mobile
+all: init_db init_server start_db start_server start_openia start_web start_mobile
 
 init_db:
 	@echo "initialize database is starting..."
@@ -24,11 +22,14 @@ init_db:
 		docker run -d -p $(MONGO_PORT):$(MONGO_PORT) --name $(MONGO_CONTAINER) -v $(MONGO_VOLUME):/data/db mongo; \
 		sleep 5; \
 	fi
-	# Add your database initialization code here
+
+start_db:
+	@echo "Starting MongoDB container..."
+	@docker start $(MONGO_CONTAINER)
 
 init_server: $(VENV)
 	@echo "Initializing the server..."
-	@python3 -m venv $(VENV)
+	@python -m venv $(VENV)
 	@echo "Creating virtual environment..."
 	@bash -c "source $(VENV)/bin/activate && \
 	echo 'Installing requirements...' && \
@@ -36,19 +37,19 @@ init_server: $(VENV)
 
 start_server:
 	@echo "Starting server..."
-	@gnome-terminal -- bash -c "source $(VENV)/bin/activate && python backend/login_server/server.py; exec bash"
+	@nohup bash -c "source $(VENV)/bin/activate && python backend/login_server/run.py" > server.log 2>&1 & tail -f server.log &
 
 start_openia:
 	@echo "Starting OpenIA API..."
-	@gnome-terminal -- bash -c "cd backend/openia_api && npm run dev; exec bash"
+	@nohup bash -c "cd backend/openia_api && npm run dev" > openia.log 2>&1 & tail -f openia.log &
 
 start_web:
 	@echo "Starting Web UI..."
-	@gnome-terminal -- bash -c "cd $(FRONTEND_DIR) && npm install && npm start; exec bash"
+	@nohup bash -c "cd $(FRONTEND_DIR) && npm install && npm start" > web.log 2>&1 & tail -f web.log &
 
 start_mobile:
 	@echo "Starting mobile app..."
-	@gnome-terminal -- bash -c "cd $(MOBILE_DIR) && npx react-native start && npm run start-android; exec bash"
+	@nohup bash -c "cd $(MOBILE_DIR) && npx react-native start && npm run start-android" > mobile.log 2>&1 & tail -f mobile.log &
 
 $(VENV):
 	@python3 -m venv $(VENV)
