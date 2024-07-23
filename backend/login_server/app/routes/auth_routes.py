@@ -38,9 +38,23 @@ facebook = oauth.register(
 
 @auth_bp.route("/auth/login/google")
 def auth_google():
+    # Récupérer les paramètres device_id et device_name de la requête
+    device_id = request.args.get("device_id")
+    device_name = request.args.get("device_name")
 
+    # Vérifiez si les paramètres sont présents, sinon retournez une erreur
+    if not device_id or not device_name:
+        return "device_id and device_name are required", 400
+
+    # Construire l'URL de redirection avec les paramètres device_id et device_name
     redirect_uri = url_for("auth.authorize", _external=True)
-    return google.authorize_redirect(redirect_uri, prompt="select_account")
+    # Retourner directement l'objet de réponse de la redirection OAuth
+    return oauth.google.authorize_redirect(
+        redirect_uri,
+        prompt="select_account",
+        device_id=device_id,
+        device_name=device_name,
+    )
 
 
 @auth_bp.route("/oauth2callback")

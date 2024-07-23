@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet, Alert} from 'react-native';
+import {NavigationProp, CommonActions} from '@react-navigation/native';
 import AuthRepository from '../repositories/AuthRepository';
 import OpenIARepository from '../repositories/OpenIARepository';
 
@@ -7,26 +8,41 @@ const useRandomText = () => {
   const [randomText, setRandomText] = useState('');
 
   useEffect(() => {
-    if (!randomText) {
+    const fetchText = async () => {
       const openIARepository = new OpenIARepository();
-      openIARepository.fetchRandomText().then(text => {
-        setRandomText(text);
-      });
+      const text = await openIARepository.fetchRandomText();
+      setRandomText(text);
+    };
+
+    if (!randomText) {
+      fetchText();
     }
   }, [randomText]);
 
   return randomText;
 };
 
-const HomeScreen = () => {
+type HomeScreenProps = {
+  navigation: NavigationProp<any>;
+};
+
+const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const randomText = useRandomText();
 
   const handleLogout = async () => {
     const authRepository = new AuthRepository();
-    await authRepository.logout();
-    Alert.alert('Logged out', 'You have been logged out successfully', [
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
+    try {
+      await authRepository.logout();
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        }),
+      );
+      // navigation.navigate('Home', {screen: 'Login'});
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'An error occurred');
+    }
   };
 
   return (

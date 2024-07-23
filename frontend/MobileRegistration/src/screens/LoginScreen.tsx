@@ -1,22 +1,26 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, Alert, StyleSheet} from 'react-native';
 import tailwind from 'tailwind-rn';
 
 import {NavigationProp, RouteProp} from '@react-navigation/native';
+import CustomTextInput from '../components/CustomTextInput';
+import LoginButton from '../components/LoginButton';
+import SocialButton from '../components/SocialButton';
 
-// ...
+const googleImage = require('../../assets/Google.png');
+const facebookImage = require('../../assets/Facebook.png');
 
 type LoginScreenProps = {
   navigation: NavigationProp<any>;
   route: RouteProp<any, any>;
 };
 
-const LoginScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
+const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
 
-  const isRegisterPage = route.name === 'Register';
+  const [isRegisterPage, setIsRegisterPage] = useState(false);
 
   const handleEmailChange = (text: string) => {
     setEmail(text);
@@ -28,12 +32,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
     return re.test(newEmail);
   };
 
-  const handleLoginRegister = () => {
-    if (isEmailValid && password) {
-      Alert.alert(isRegisterPage ? 'Register' : 'Log in', 'Success');
-    } else {
-      Alert.alert('Error', 'Please enter valid email and password');
-    }
+  const handlePageChange = () => {
+    setIsRegisterPage(!isRegisterPage);
   };
 
   return (
@@ -43,20 +43,18 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
       </Text>
 
       <View style={tailwind('mt-12')}>
-        <TextInput
+        <CustomTextInput
           placeholder="Email"
-          style={tailwind('border p-2 rounded mb-4')}
+          icon="mail"
           value={email}
-          onChangeText={handleEmailChange}
-          keyboardType="email-address"
-          autoCapitalize="none"
+          onChange={handleEmailChange}
         />
-        <TextInput
+        <CustomTextInput
           placeholder="Password"
-          style={tailwind('border p-2 rounded mb-4')}
-          value={password}
-          onChangeText={setPassword}
+          icon="lock"
           secureTextEntry
+          value={password}
+          onChange={e => setPassword(e)}
         />
 
         <TouchableOpacity
@@ -67,64 +65,52 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
           <Text>Forgot password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={handleLoginRegister}
-          style={tailwind(
-            `bg-blue-600 p-4 rounded ${!isEmailValid ? 'bg-opacity-50' : ''}`,
-          )}
-          disabled={!isEmailValid}>
-          <Text style={tailwind('text-white text-center')}>
-            {isRegisterPage ? 'Register' : 'Log in'}
-          </Text>
-        </TouchableOpacity>
+        <LoginButton
+          label={isRegisterPage ? 'Register' : 'Log in'}
+          disabled={!isEmailValid}
+          email={email}
+          password={password}
+        />
       </View>
 
       <View style={tailwind('flex flex-row justify-center mt-4')}>
-        <TouchableOpacity
-          onPress={() =>
-            Alert.alert('Google Login', 'Redirect to Google login')
-          }
-          style={tailwind('mr-2')}>
-          <Text style={tailwind('text-center')}>Google</Text>
-        </TouchableOpacity>
+        <SocialButton label={'Google'} imagePath={googleImage} />
 
+        <SocialButton label={'Facebook'} imagePath={facebookImage} />
+      </View>
+      <View style={tailwind('mt-4 text-center')}>
+        <Text style={tailwind('text-gray-500 text-center text-sm')}>
+          {isRegisterPage ? 'Have no account yet?' : 'Already have an account?'}
+        </Text>
         <TouchableOpacity
-          onPress={() =>
-            Alert.alert('Facebook Login', 'Redirect to Facebook login')
-          }
-          style={tailwind('ml-2')}>
-          <Text style={tailwind('text-center')}>Facebook</Text>
+          onPress={() => handlePageChange()}
+          style={(tailwind('mt-2'), styles.button)}>
+          <Text style={tailwind('text-blue-600 text-center')}>
+            {isRegisterPage ? 'Log in' : 'Register'}
+          </Text>
         </TouchableOpacity>
       </View>
-
-      {!isRegisterPage && (
-        <View style={tailwind('mt-4 text-center')}>
-          <Text style={tailwind('text-gray-500 text-center text-sm')}>
-            Have no account yet?{' '}
-          </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Register')}
-            style={tailwind('mt-2')}>
-            <Text style={tailwind('text-blue-600 text-center')}>Register</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {isRegisterPage && (
-        <View style={tailwind('mt-4 text-center')}>
-          <Text style={tailwind('text-gray-500 text-center text-sm')}>
-            Already have an account?{' '}
-          </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Login')}
-            style={tailwind('mt-2')}>
-            <Text style={tailwind('text-blue-600 text-center')}>Login</Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 };
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#3498db',
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  disabledButton: {
+    backgroundColor: '#bdc3c7',
+  },
+});
 
 export default LoginScreen;
 

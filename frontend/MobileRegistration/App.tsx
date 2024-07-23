@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, View} from 'react-native';
-import LoginScreen from './src/screens/LoginScreen'; // Ensure the path is correct
+import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -36,12 +35,9 @@ function App(): React.JSX.Element {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {isLoggedIn ? (
-          <Stack.Screen name="Home" component={HomeScreen} />
-        ) : (
-          <Stack.Screen name="Login" component={LoginScreen} />
-        )}
+      <Stack.Navigator initialRouteName={isLoggedIn ? 'Home' : 'Login'}>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
