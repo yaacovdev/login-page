@@ -1,7 +1,10 @@
 .App {
   text-align: center;
 }
-
+input {
+  background-color: white !important;
+  box-shadow: none !important; /* Supprime l'ombre bleue */
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
