@@ -2,13 +2,13 @@ import React from "react";
 
 const LeftSide: React.FC = () => {
     return (
-        <div className="flex flex-col w-full h-full m-9">
+        <div className="flex flex-col w-full h-full">
             <div className="flex justify-start">
-                <div className="mt-5">
+                <div className="">
                     <img src="/images/logo.png" alt="Logo" className="mb-4" />
                 </div>
             </div>
-            <div className="flex flex-col justify-center items-center ">
+            <div className="flex flex-col justify-center items-center">
                 <img src="/images/man.png" alt="Man" className="-mb-5" />
                 <h1
                     className="text-white"

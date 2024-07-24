@@ -26,7 +26,7 @@ const RightSide: React.FC = () => {
     };
 
     return (
-        <div className="flex items-center text-center justify-center h-full bg-[#FFFFFF]">
+        <div className="flex items-center text-center justify-center w-full p-12 h-full bg-[#FFFFFF]">
             <div className="w-full flex flex-col max-w-md mx-auto">
                 <h2
                     className="font-semibold text-primary text-center"
