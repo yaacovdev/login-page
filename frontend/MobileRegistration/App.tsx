@@ -4,6 +4,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as Keychain from 'react-native-keychain';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +14,9 @@ function App(): React.JSX.Element {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const credentials = await Keychain.getGenericPassword();
+        const credentials = await Keychain.getGenericPassword({
+          service: 'authToken',
+        });
         if (credentials) {
           console.log(
             'Credentials successfully loaded for user',
@@ -33,9 +36,19 @@ function App(): React.JSX.Element {
     checkLoginStatus();
   }, []);
 
+  if (isLoggedIn === null) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="blue" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={isLoggedIn ? 'Home' : 'Login'}>
+      <Stack.Navigator
+        screenOptions={{headerShown: false}}
+        initialRouteName={isLoggedIn ? 'Home' : 'Login'}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
       </Stack.Navigator>
@@ -43,4 +56,11 @@ function App(): React.JSX.Element {
   );
 }
 
+const styles = StyleSheet.create({
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 export default App;

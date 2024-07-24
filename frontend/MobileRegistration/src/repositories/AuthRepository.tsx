@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as Keychain from 'react-native-keychain';
+import Keychain from 'react-native-keychain';
 class AuthRepository {
   public AUTH_API_URL = process.env.AUTH_API_URL || 'http://10.0.2.2:5000/auth';
   private axiosInstance = axios.create({
@@ -15,10 +15,10 @@ class AuthRepository {
 
       if (response.status === 200) {
         if (response.data.token) {
-          await Keychain.setGenericPassword('email', response.data.token);
-          console.log('Login successful');
-          const credentials = await Keychain.getGenericPassword();
-          console.log('Token:', credentials);
+          await Keychain.setGenericPassword('email', response.data.token, {
+            accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+            service: 'authToken',
+          });
         }
         return true;
       } else if (response.status === 209) {
@@ -41,7 +41,10 @@ class AuthRepository {
 
       if (response.status === 201) {
         if (response.data.token) {
-          await Keychain.setGenericPassword(email, response.data.token);
+          await Keychain.setGenericPassword(email, response.data.token, {
+            accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+            service: 'authToken',
+          });
         }
         return true;
       } else if (response.status === 209) {
@@ -57,9 +60,8 @@ class AuthRepository {
 
   async logout(): Promise<void> {
     try {
-      await Keychain.resetGenericPassword();
+      await Keychain.resetGenericPassword({service: 'authToken'});
       await this.axiosInstance.get('/logout');
-      console.log('Logging out');
     } catch (error) {
       console.error('Error occurred during logout:', error);
     }

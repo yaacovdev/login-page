@@ -37,7 +37,7 @@ const SocialButton: React.FC<SocialButtonProps> = ({label, imagePath}) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Image source={imagePath} style={styles.icon} />
         <Text style={styles.label}>{label}</Text>
@@ -66,22 +66,21 @@ const SocialButton: React.FC<SocialButtonProps> = ({label, imagePath}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: '48%',
+  },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#1e90ff',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    borderColor: '#3949AB',
+    paddingVertical: 8,
     borderRadius: 25,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-    marginVertical: 5,
+    width: '100%',
+  },
+  buttonClicked: {
+    backgroundColor: '#3949AB',
   },
   icon: {
     width: 20,
@@ -89,8 +88,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   label: {
-    color: '#1e90ff',
-    fontWeight: 'bold',
+    color: '#3949AB',
+    fontWeight: 'medium',
     fontSize: 14,
   },
   closeButton: {
@@ -99,6 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     color: 'white',
     textAlign: 'center',
+    borderRadius: 25,
   },
 });
 

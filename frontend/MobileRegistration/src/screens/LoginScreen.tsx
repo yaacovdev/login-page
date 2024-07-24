@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Alert, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import tailwind from 'tailwind-rn';
 
 import {NavigationProp, RouteProp} from '@react-navigation/native';
@@ -9,7 +16,7 @@ import SocialButton from '../components/SocialButton';
 
 const googleImage = require('../../assets/Google.png');
 const facebookImage = require('../../assets/Facebook.png');
-
+const logo = require('../../assets/logo.png');
 type LoginScreenProps = {
   navigation: NavigationProp<any>;
   route: RouteProp<any, any>;
@@ -37,12 +44,15 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
   };
 
   return (
-    <View style={tailwind('p-9 flex justify-center bg-white')}>
-      <Text style={tailwind('font-semibold text-center text-xl')}>
+    <View style={tailwind('p-9 flex justify-center bg-white w-full h-full')}>
+      <View style={tailwind('flex-row justify-center')}>
+        <Image source={logo} style={tailwind('')} />
+      </View>
+      <Text style={tailwind('font-semibold text-center text-xl mt-10')}>
         {isRegisterPage ? 'Register' : 'Log in'}
       </Text>
 
-      <View style={tailwind('mt-12')}>
+      <View style={tailwind('mt-12 w-full')}>
         <CustomTextInput
           placeholder="Email"
           icon="mail"
@@ -56,13 +66,14 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
           value={password}
           onChange={e => setPassword(e)}
         />
-
         <TouchableOpacity
           onPress={() =>
             Alert.alert('Forgot Password', 'Redirect to forgot password screen')
           }
-          style={tailwind('items-center justify-end text-sm mb-4')}>
-          <Text>Forgot password?</Text>
+          style={tailwind('flex-row justify-end mb-4')}>
+          <Text style={(tailwind('text-sm'), {color: '#3949AB'})}>
+            Forgot password?
+          </Text>
         </TouchableOpacity>
 
         <LoginButton
@@ -72,19 +83,27 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
           password={password}
         />
       </View>
+      <View
+        style={tailwind(`flex flex-row items-center justify-center ml-8 mr-8`)}>
+        <View style={tailwind('flex-1 h-px bg-gray-400 mr-2')} />
+        <Text style={tailwind('text-gray-500 text-center text-lg')}>Or</Text>
+        <View style={tailwind('flex-1 h-px bg-gray-400 ml-2')} />
+      </View>
 
-      <View style={tailwind('flex flex-row justify-center mt-4')}>
+      <View style={tailwind('flex flex-row  justify-between mt-2')}>
         <SocialButton label={'Google'} imagePath={googleImage} />
 
         <SocialButton label={'Facebook'} imagePath={facebookImage} />
       </View>
       <View style={tailwind('mt-4 text-center')}>
-        <Text style={tailwind('text-gray-500 text-center text-sm')}>
-          {isRegisterPage ? 'Have no account yet?' : 'Already have an account?'}
+        <Text style={tailwind('text-gray-500 text-center text-sm mb-3')}>
+          {!isRegisterPage
+            ? 'Have no account yet?'
+            : 'Already have an account?'}
         </Text>
         <TouchableOpacity
           onPress={() => handlePageChange()}
-          style={(tailwind('mt-2'), styles.button)}>
+          style={(tailwind('mt-4'), styles.button)}>
           <Text style={tailwind('text-blue-600 text-center')}>
             {isRegisterPage ? 'Log in' : 'Register'}
           </Text>
@@ -95,20 +114,21 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
 };
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#3498db',
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 25,
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    borderColor: '#3949AB',
+    borderWidth: 1,
   },
   buttonText: {
-    color: '#fff',
+    color: '#3949AB',
     fontSize: 16,
   },
   disabledButton: {
-    backgroundColor: '#bdc3c7',
+    backgroundColor: '#3949AB',
   },
 });
 
