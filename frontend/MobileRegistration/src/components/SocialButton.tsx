@@ -10,6 +10,7 @@ import {
 import AuthRepository from '../repositories/AuthRepository'; // Adjust the path as needed
 import {WebView} from 'react-native-webview';
 import DeviceInfo from 'react-native-device-info';
+import {useAuth0} from 'react-native-auth0';
 
 interface SocialButtonProps {
   label: string;
@@ -19,17 +20,18 @@ interface SocialButtonProps {
 const SocialButton: React.FC<SocialButtonProps> = ({label, imagePath}) => {
   const [authUrl, setAuthUrl] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const {authorize} = useAuth0();
 
   const handleLogin = async () => {
     const authRepository = new AuthRepository();
     const deviceId = await DeviceInfo.getUniqueId();
     const deviceName = await DeviceInfo.getDeviceName();
     if (label === 'Google') {
-      setAuthUrl(
-        authRepository.AUTH_API_URL +
-          `/login/google?device_id=${deviceId}&device_name=${deviceName}`,
-      );
-      setModalVisible(true);
+      try {
+        await authorize();
+      } catch (e) {
+        console.log(e);
+      }
     } else if (label === 'Facebook') {
       setAuthUrl(authRepository.AUTH_API_URL + '/login/facebook');
       setModalVisible(true);

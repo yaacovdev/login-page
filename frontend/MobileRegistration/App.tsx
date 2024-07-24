@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as Keychain from 'react-native-keychain';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {Auth0Provider} from 'react-native-auth0';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,14 +46,18 @@ function App(): React.JSX.Element {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{headerShown: false}}
-        initialRouteName={isLoggedIn ? 'Home' : 'Login'}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Auth0Provider
+      domain={'dev-x68uv01qodfof87n.us.auth0.com'}
+      clientId={'lA195SFODw0CsuiCpLiYBCyz3Pzk6yPu'}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{headerShown: false}}
+          initialRouteName={isLoggedIn ? 'Home' : 'Login'}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Auth0Provider>
   );
 }
 
