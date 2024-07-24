@@ -1,18 +1,19 @@
 import React from "react";
 import AuthRepository from "../repositories/AuthRepository";
 
-const SocialButton: React.FC<{ label: string , imagePath:string}> = ({ label, imagePath }) => {
+const SocialButton: React.FC<{ label: string; imagePath: string }> = ({
+    label,
+    imagePath,
+}) => {
     const handleLogin = () => {
         const authRepository = new AuthRepository();
         if (label === "Google") {
             authRepository.googleLogin();
-        }
-        else if (label === "Facebook") {
+        } else if (label === "Facebook") {
             authRepository.facebookLogin();
         }
     };
 
-    
     return (
         <button
             className={`
@@ -23,7 +24,7 @@ const SocialButton: React.FC<{ label: string , imagePath:string}> = ({ label, im
                 border-blue-500
                 text-blue-500
                 font-bold
-                py-2
+                py-1
                 px-4
                 rounded-full
                 hover:bg-[#F0F0F0]
@@ -33,12 +34,12 @@ const SocialButton: React.FC<{ label: string , imagePath:string}> = ({ label, im
                 disabled:opacity-50
                 disabled:cursor-not-allowed 
                 mr-1
-                text-primary
+                text-primary 
+                text-xs 
             `}
             onClick={handleLogin}
             style={{
                 width: "50%",
-                fontSize: 14,
                 fontWeight: 500,
                 letterSpacing: "0%",
                 textAlign: "center",
@@ -53,6 +54,5 @@ const SocialButton: React.FC<{ label: string , imagePath:string}> = ({ label, im
         </button>
     );
 };
-
 
 export default SocialButton;

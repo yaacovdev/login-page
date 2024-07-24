@@ -33,14 +33,14 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     };
 
     return (
-        <div className="flex items-center border border-gray-300 rounded-lg px-4 mb-4 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-50">
-            <img src={icons[icon]} alt={icon} className="w-5 h-5 mr-2" />
+        <div className="flex items-center border border-gray-300 rounded-lg px-1 mb-4 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-50">
+            <img src={icons[icon]} alt={icon} className="w-5 h-5 mr-1" />
             <input
                 type={
                     secureTextEntry && !isPasswordVisible ? "password" : "text"
                 }
                 placeholder={placeholder}
-                className="flex-grow py-2 px-2 focus:outline-none"
+                className="flex-grow py-1 focus:outline-none focus:bg-transparent text-sm"
                 value={value}
                 onChange={onChange}
                 {...rest}

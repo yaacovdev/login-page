@@ -42,7 +42,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
     return (
         <div className="flex flex-col items-center">
             {error && (
-                <p className="text-red-500 mb-2 text-center whitespace-pre-line text-sm">
+                <p className="text-red-500 mb-2 text-center whitespace-pre-line text-xs">
                     {error}
                 </p>
             )}
@@ -52,8 +52,9 @@ const LoginButton: React.FC<LoginButtonProps> = ({
         bg-primary
         hover:bg-[#27368F] 
         text-white 
+        text-sm
         font-bold 
-        py-2 
+        py-1
         px-4 
         rounded-full 
         focus:outline-none 

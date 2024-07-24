@@ -12,7 +12,7 @@ const RedirectButton: React.FC<{ path: string; label: string; }> = ({ path, labe
         <button
             className={`
                 font-bold
-                py-2
+                py-1
                 w-full
                 border
                 border-blue-500
@@ -22,15 +22,15 @@ const RedirectButton: React.FC<{ path: string; label: string; }> = ({ path, labe
                 focus:outline-none
                 focus:ring
                 text-primary
+                text-xs
             `}
             onClick={handleClick}
             style={{
-                width: "50%",
+                width: "100%",
                 fontSize: 14,
-                fontWeight: 500,
+                fontWeight: 400,
                 letterSpacing: "0%",
                 textAlign: "center",
-                color: "#",
             }}
         >
             {label}
