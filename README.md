@@ -8,48 +8,47 @@ This project is designed to demonstrate a full-stack registration interface usin
 
 The application is Dockerized and includes MongoDB for database management. Additional functionality includes sending Toast messages with random text obtained from an OpenAI GPT API.
 
+
+
 ## Project Structure
 
 ```plaintext
 login-page
+├── sceenshots
 ├── backend
 │   ├── login_server
 │   │   ├── app
 │   │   ├── Dockerfile
 │   │   ├── requirements.txt
 │   │   ├── run.py
+│   │   └── ...
 │   └── openia_api
 │       ├── Dockerfile
 │       ├── package.json
 │       ├── package-lock.json
 │       ├── src
-│       └── tsconfig.json
+│       └── ...
 ├── docker-compose.yml
 ├── frontend
 │   ├── MobileRegistration
-│   │   ├── app.json
 │   │   ├── App.tsx
 │   │   ├── assets
-│   │   ├── babel.config.js
 │   │   ├── index.js
 │   │   ├── package.json
 │   │   ├── README.md
 │   │   ├── src
 │   │   ├── tailwind.config.js
-│   │   ├── tailwind.css
-│   │   ├── tsconfig.json
+│   │   └── ...
 │   └── web-registration
 │       ├── Dockerfile
 │       ├── package.json
-│       ├── package-lock.json
-│       ├── postcss.config.js
 │       ├── public
 │       ├── README.md
 │       ├── src
-│       ├── tailwind.config.js
-│       └── tsconfig.json
+│       └── ...
 ├── Makefile
-└── README.md
+├── README.md
+└── docker-compose.yml
 ```
 
 ## Requirements
@@ -100,6 +99,29 @@ This will build the necessary images and start all containers defined in `docker
 ## Additional Information
 After registration, a Simple Text will be sent to the user.
 The Toast message content is retrieved from an OpenAI GPT API server running on a second server written in NodeJS.
+
 ## Reporting Progress
 Please report your progress and upload your code to the shared GitHub repository.
 
+
+## Screenshots
+
+
+### Mobile Registration Interface
+![Mobile Registration](screenshots/mobile_registration.png)
+
+![Mobile Registration](screenshots/email_registration.png)
+
+
+
+![Facebook Registration](screenshots/facebook_registration.png)
+
+![Home Screen](screenshots/home_page_mobile.png)
+
+
+### Web Registration Interface
+![Web Registration](screenshots/web_registration.png)
+
+![Google Registration](screenshots/google_registration.png)
+
+![Home Screen](screenshots/home_page_web.png)

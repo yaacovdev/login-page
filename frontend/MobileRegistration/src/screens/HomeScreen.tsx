@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button, StyleSheet, Alert} from 'react-native';
+import {View, Text, Button, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import {NavigationProp, CommonActions} from '@react-navigation/native';
 import AuthRepository from '../repositories/AuthRepository';
 import OpenIARepository from '../repositories/OpenIARepository';
@@ -47,9 +47,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoutButtonContainer}>
-        <Button title="Logout" onPress={handleLogout} color="#1E90FF" />
-      </View>
+      <TouchableOpacity style={styles.logoutButton}  onPress={handleLogout}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
       <View style={styles.contentContainer}>
         <Text style={styles.title}>
           {randomText !== ''
@@ -70,10 +70,19 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#F5F5F5',
   },
-  logoutButtonContainer: {
+  logoutButton: {
     position: 'absolute',
     top: 40,
     right: 20,
+    backgroundColor: '#3949AB',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 25,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
   },
   contentContainer: {
     backgroundColor: 'white',
