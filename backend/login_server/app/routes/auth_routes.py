@@ -21,7 +21,6 @@ google = oauth.register(
     client_kwargs={"scope": "email profile"},
     server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
 )
-
 facebook = oauth.register(
     name="facebook",
     client_id=current_app.config["FACEBOOK_CLIENT_ID"],
@@ -32,35 +31,22 @@ facebook = oauth.register(
     access_token_params=None,
     refresh_token_url=None,
     redirect_uri="http://localhost:5000/auth/login/facebook",
-    client_kwargs={"scope": "email"},
+    client_kwargs={"scope": "public_profile"},
 )
 
 
 @auth_bp.route("/auth/login/google")
 def auth_google():
-    # Récupérer les paramètres device_id et device_name de la requête
-    device_id = request.args.get("device_id")
-    device_name = request.args.get("device_name")
 
-    # Vérifiez si les paramètres sont présents, sinon retournez une erreur
-    if not device_id or not device_name:
-        return "device_id and device_name are required", 400
-
-    # Construire l'URL de redirection avec les paramètres device_id et device_name
     redirect_uri = url_for("auth.authorize", _external=True)
-    # Retourner directement l'objet de réponse de la redirection OAuth
-    return oauth.google.authorize_redirect(
-        redirect_uri,
-        prompt="select_account",
-        device_id=device_id,
-        device_name=device_name,
-    )
+    return google.authorize_redirect(redirect_uri, prompt="select_account")
 
 
 @auth_bp.route("/oauth2callback")
 def authorize():
     token = oauth.google.authorize_access_token()
     decoded_info = decode_google_token(token["id_token"])
+    print(decoded_info)
     user_info = {
         "email": decoded_info["email"],
         "name": decoded_info["name"],
@@ -82,7 +68,6 @@ def authorize():
         users_collection.update_one(
             {"email": user_info["email"]}, {"$set": {"google_id": user_info["sub"]}}
         )
-
     return f"""
     <script>
         window.opener.postMessage({{JWT: JSON.stringify('{token['access_token']}')}}, 'http://localhost:3000');
@@ -100,11 +85,15 @@ def auth_facebook():
 @auth_bp.route("/oauth2callback/facebook")
 def authorize_facebook():
     token = oauth.facebook.authorize_access_token()
-    resp = oauth.facebook.get(
-        "https://graph.facebook.com/me?fields=id,name,email", token=token
-    )
+    resp = oauth.facebook.get("https://graph.facebook.com/me?fields=id,name,email", token=token)
     user_info = resp.json()
+    print(user_info)
+
+    # Connexion à MongoDB
+
     users_collection = current_app.db.users
+
+    # Vérifiez si l'utilisateur existe déjà et insérez si ce n'est pas le cas
     user = users_collection.find_one({"email": user_info["email"]})
     if not user:
         users_collection.insert_one(
@@ -115,8 +104,10 @@ def authorize_facebook():
             }
         )
 
-    token = create_jwt_token(user_info["id"])
-    return jsonify(token=token)
+    # Créez un token JWT pour l'utilisateur
+    jwt_token = create_jwt_token(user_info["id"])
+
+    return jsonify(token=jwt_token)
 
 
 @auth_bp.route("/auth/logout")
@@ -129,7 +120,7 @@ def logout():
             headers={"content-type": "application/x-www-form-urlencoded"},
         )
     session.clear()
-    return redirect("http://localhost:3000")
+    return jsonify({"message": "Logout successful"})
 
 
 @auth_bp.route("/auth/register", methods=["POST"])
