@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import OpenAI from "openai";
 import cors from 'cors';
+
+
 dotenv.config();
 
 const openai = new OpenAI(
