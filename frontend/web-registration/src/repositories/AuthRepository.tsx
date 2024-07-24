@@ -46,7 +46,6 @@ class AuthRepository {
             } else if (response.status === 209) {
                 return response.data.message;
             } else {
-                console.log(response.data);
                 return response.data;
             }
         } catch (error) {
@@ -60,9 +59,6 @@ class AuthRepository {
             // Make an API call to log out the user
             await this.axiosInstance.get("/logout");
 
-            // Remove the authentication token from local storage or cookies
-
-            console.log("Logging out");
             localStorage.removeItem("JWT");
         } catch (error) {
             console.error("Error occurred during logout:", error);
