@@ -49,7 +49,7 @@ start_web:
 
 start_mobile:
 	@echo "Starting mobile app..."
-	@nohup bash -c "cd $(MOBILE_DIR) && npx react-native start && npm run start-android" > mobile.log 2>&1 & tail -f mobile.log &
+	@nohup bash -c "cd $(MOBILE_DIR) && npm run start-android  && npx react-native start" > mobile.log 2>&1 & tail -f mobile.log &
 
 $(VENV):
 	@python3 -m venv $(VENV)
