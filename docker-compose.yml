@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - /path/to/data:/data/db
+
+  login_server:
+    build:
+      context: ./backend/login_server
+      dockerfile: Dockerfile
+    container_name: login_server
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./backend/login_server:/app
+    command: bash -c "source venv/bin/activate && python run.py"
+    depends_on:
+      - mongodb
+
+  openia_api:
+    build:
+      context: ./backend/openia_api
+      dockerfile: Dockerfile
+    container_name: openia_api
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/openia_api:/app
+    command: npm run dev
+
+  web:
+    build:
+      context: ./frontend/web-registration
+      dockerfile: Dockerfile
+    container_name: web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/web-registration:/app
+    command: bash -c "npm install && npm start"

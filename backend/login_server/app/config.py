@@ -6,7 +6,7 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "your_secret_key")
-    MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/login_server")
+    MONGO_URI = os.environ.get("MONGO_URI", "mongodb://0.0.0.0:27017/login-page")
     JWT_SECRET = os.environ.get("JWT_SECRET")
     GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
     GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")

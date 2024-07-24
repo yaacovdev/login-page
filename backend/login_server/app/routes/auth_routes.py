@@ -17,7 +17,7 @@ google = oauth.register(
     access_token_url="https://accounts.google.com/o/oauth2/token",
     access_token_params=None,
     refresh_token_url=None,
-    redirect_uri="http://localhost:5000/auth/google",
+    redirect_uri="http://0.0.0.0:5000/auth/google",
     client_kwargs={"scope": "email profile"},
     server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
 )
@@ -30,7 +30,7 @@ facebook = oauth.register(
     access_token_url="https://graph.facebook.com/v10.0/oauth/access_token",
     access_token_params=None,
     refresh_token_url=None,
-    redirect_uri="http://localhost:5000/auth/login/facebook",
+    redirect_uri="http://0.0.0.0:5000/auth/login/facebook",
     client_kwargs={"scope": "public_profile"},
 )
 
@@ -70,7 +70,7 @@ def authorize():
         )
     return f"""
     <script>
-        window.opener.postMessage({{JWT: JSON.stringify('{token['access_token']}')}}, 'http://localhost:3000');
+        window.opener.postMessage({{JWT: JSON.stringify('{token['access_token']}')}}, 'http://127.0.0.1:3000');
         window.close();
     </script>
     """
