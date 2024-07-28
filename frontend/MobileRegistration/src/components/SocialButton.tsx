@@ -9,7 +9,12 @@ import {
 } from 'react-native';
 import AuthRepository from '../repositories/AuthRepository'; // Adjust the path as needed
 import {WebView} from 'react-native-webview';
-import DeviceInfo from 'react-native-device-info';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import '../googleSigninConfig';
 
 interface SocialButtonProps {
   label: string;
@@ -22,14 +27,10 @@ const SocialButton: React.FC<SocialButtonProps> = ({label, imagePath}) => {
 
   const handleLogin = async () => {
     const authRepository = new AuthRepository();
-    const deviceId = await DeviceInfo.getUniqueId();
-    const deviceName = await DeviceInfo.getDeviceName();
     if (label === 'Google') {
-      setAuthUrl(
-        authRepository.AUTH_API_URL +
-          `/login/google?device_id=${deviceId}&device_name=${deviceName}`,
-      );
-      setModalVisible(true);
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      authRepository.handleGoogleLogin(userInfo);
     } else if (label === 'Facebook') {
       setAuthUrl(authRepository.AUTH_API_URL + '/login/facebook');
       setModalVisible(true);

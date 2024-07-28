@@ -58,6 +58,31 @@ class AuthRepository {
     }
   }
 
+  async handleGoogleLogin(userInfo: any): Promise<void> {
+    try {
+      const response = await this.axiosInstance.post('/login/google', {
+        email: userInfo.user.email,
+        name: userInfo.user.name,
+        sub: userInfo.user.sub,
+      });
+
+      if (response.status === 200) {
+        if (response.data.token) {
+          await Keychain.setGenericPassword(
+            userInfo.user.email,
+            response.data.token,
+            {
+              accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+              service: 'authToken',
+            },
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error occurred during Google login:', error);
+    }
+  }
+
   async logout(): Promise<void> {
     try {
       await Keychain.resetGenericPassword({service: 'authToken'});
