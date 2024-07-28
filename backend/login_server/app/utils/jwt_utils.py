@@ -2,6 +2,7 @@ import datetime
 import jwt
 import os
 
+
 def create_jwt_token(user_id):
     payload = {
         "user_id": str(user_id),

@@ -35,22 +35,15 @@ facebook = oauth.register(
 )
 
 
-@auth_bp.route("/auth/login/google")
+@auth_bp.route("/auth/login/google", methods=["POST"])
 def auth_google():
-
-    redirect_uri = url_for("auth.authorize", _external=True)
-    return google.authorize_redirect(redirect_uri, prompt="select_account")
-
-
-@auth_bp.route("/oauth2callback")
-def authorize():
-    token = oauth.google.authorize_access_token()
-    decoded_info = decode_google_token(token["id_token"])
-    print(decoded_info)
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
     user_info = {
-        "email": decoded_info["email"],
-        "name": decoded_info["name"],
-        "sub": decoded_info["user_id"],
+        "email": data["email"],
+        "name": data["name"],
+        "sub": data["sub"],
     }
 
     users_collection = current_app.db.users
@@ -68,12 +61,7 @@ def authorize():
         users_collection.update_one(
             {"email": user_info["email"]}, {"$set": {"google_id": user_info["sub"]}}
         )
-    return f"""
-    <script>
-        window.opener.postMessage({{JWT: JSON.stringify('{token['access_token']}')}}, 'http://127.0.0.1:3000');
-        window.close();
-    </script>
-    """
+    return jsonify({"message": "Login successful", "token": create_jwt_token(user_info["sub"])})
 
 
 @auth_bp.route("/auth/login/facebook")
@@ -85,7 +73,9 @@ def auth_facebook():
 @auth_bp.route("/oauth2callback/facebook")
 def authorize_facebook():
     token = oauth.facebook.authorize_access_token()
-    resp = oauth.facebook.get("https://graph.facebook.com/me?fields=id,name,email", token=token)
+    resp = oauth.facebook.get(
+        "https://graph.facebook.com/me?fields=id,name,email", token=token
+    )
     user_info = resp.json()
     print(user_info)
 

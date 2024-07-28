@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './screens/LoginPage';
-import HomePage from './screens/HomePage';
+import React, { useState, useEffect } from "react";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
+import LoginPage from "./screens/LoginPage";
+import HomePage from "./screens/HomePage";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const App = () => {
     const [token, setToken] = useState(localStorage.getItem("JWT"));
 
     useEffect(() => {
-        const handleTokenMessage = (event:any) => {
+        const handleTokenMessage = (event: any) => {
             // Check the origin of the message
             if (event.origin === "http://localhost:5000") {
                 // Extract the JWT token from the event data
@@ -36,18 +42,55 @@ const App = () => {
     }, []);
 
     return (
-        <Router>
-            <div className="min-h-screen flex items-center" style={{ backgroundColor: "#5769D4" }}>
-                <div className="w-full">
-                    <Routes>
-                        <Route path="/login" element={token ? <Navigate to="/home" /> : <LoginPage />} />
-                        <Route path="/register" element={token ? <Navigate to="/home" /> : <LoginPage />} />
-                        <Route path="/home" element={token ? <HomePage /> : <Navigate to="/login" />} />
-                        <Route path="*" element={<Navigate to={token ? "/home" : "/login"} />} />
-                    </Routes>
+        <GoogleOAuthProvider clientId="478399659834-o09u5l6muienbok1psc2hp7a7c6p8059.apps.googleusercontent.com">
+            <Router>
+                <div
+                    className="min-h-screen flex items-center"
+                    style={{ backgroundColor: "#5769D4" }}
+                >
+                    <div className="w-full">
+                        <Routes>
+                            <Route
+                                path="/login"
+                                element={
+                                    token ? (
+                                        <Navigate to="/home" />
+                                    ) : (
+                                        <LoginPage />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="/register"
+                                element={
+                                    token ? (
+                                        <Navigate to="/home" />
+                                    ) : (
+                                        <LoginPage />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="/home"
+                                element={
+                                    token ? (
+                                        <HomePage />
+                                    ) : (
+                                        <Navigate to="/login" />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="*"
+                                element={
+                                    <Navigate to={token ? "/home" : "/login"} />
+                                }
+                            />
+                        </Routes>
+                    </div>
                 </div>
-            </div>
-        </Router>
+            </Router>
+        </GoogleOAuthProvider>
     );
 };
 

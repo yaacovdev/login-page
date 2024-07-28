@@ -71,6 +71,7 @@ const RightSide: React.FC = () => {
                     <div className="w-1/4 h-[1px] bg-gray-200"></div>
                 </div>
                 <div className="flex items-center justify-center mt-4 space-x-1">
+                
                     <SocialButton
                         label={"Google"}
                         imagePath={"/images/Google.png"}

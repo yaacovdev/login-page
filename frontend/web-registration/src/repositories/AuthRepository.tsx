@@ -64,17 +64,23 @@ class AuthRepository {
             console.error("Error occurred during logout:", error);
         }
     }
-    async googleLogin(): Promise<void> {
-        const popup = window.open(
-            "http://localhost:5000/auth/login/google",
-            "GoogleAuth",
-            "width=500,height=600"
-        );
+    async handleGoogleLogin(userInfo: any): Promise<void> {
+        try {
+            // Make an API call to authenticate the user
+            const response = await this.axiosInstance.post("/login/google", {
+                email: userInfo.email,
+                name: userInfo.name,
+                sub: userInfo.sub,
+            });
 
-        if (popup) {
-            popup.focus();
-        } else {
-            alert("Please enable pop-ups for this site.");
+            // Check if the login was successful
+            if (response.status === 200) {
+                // Store the authentication token in local storage or cookies
+                localStorage.setItem("JWT", response.data.token);
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error("Error occurred during Google login:", error);
         }
     }
 

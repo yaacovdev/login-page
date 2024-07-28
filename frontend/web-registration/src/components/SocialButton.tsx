@@ -1,14 +1,33 @@
 import React from "react";
 import AuthRepository from "../repositories/AuthRepository";
-
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 const SocialButton: React.FC<{ label: string; imagePath: string }> = ({
     label,
     imagePath,
 }) => {
+    const authRepository = new AuthRepository();
+    const googleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            const userInfoResponse = await axios.get(
+                "https://www.googleapis.com/oauth2/v3/userinfo",
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.access_token}`,
+                    },
+                }
+            );
+
+            authRepository.handleGoogleLogin(userInfoResponse.data);
+        },
+        onError: (error) => {
+            console.log("Login Failed:", error);
+        },
+    });
+
     const handleLogin = () => {
-        const authRepository = new AuthRepository();
         if (label === "Google") {
-            authRepository.googleLogin();
+            googleLogin();
         } else if (label === "Facebook") {
             authRepository.facebookLogin();
         }
@@ -45,11 +64,7 @@ const SocialButton: React.FC<{ label: string; imagePath: string }> = ({
                 textAlign: "center",
             }}
         >
-            <img
-                src={imagePath}
-                alt="Google"
-                className="w-5 h-5 mr-2"
-            />
+            <img src={imagePath} alt="Google" className="w-5 h-5 mr-2" />
             {label}
         </button>
     );
